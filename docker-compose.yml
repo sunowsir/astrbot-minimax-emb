@@ -1,0 +1,28 @@
+# 【立即可用版】drop-in 替换 fnOS 上的 /vol1/1000/docker/astrbot/docker-compose.yml
+#
+# 前提：astrbot-minimax-emb:latest 已经在本地 daemon 里构建好了。
+# 面板上若出现"拉取/更新镜像"，不要点——Docker Hub 上没有这个镜像。
+#
+# 唯一的改动：image 从 soulter/astrbot:latest 换成 astrbot-minimax-emb:latest
+# 其余（端口、卷、privileged、时区）与原文件保持一致。
+#
+# 注意本文件在 /AstrBot/data/astrbot-minimax-emb/ 下，
+# 相对于 compose 工作目录 /vol1/1000/docker/astrbot 而言，
+# ./data 仍然指向同一个宿主目录，不冲突。
+services:
+  astrbot:
+    image: astrbot-minimax-emb:latest
+    container_name: astrbot
+    privileged: true
+    restart: always
+    environment:
+      - TZ=Asia/Shanghai
+    ports:
+      - "6185:6185"
+      #- "6195:6195"
+      #- "6199:6199"
+    volumes:
+      - ./data:/AstrBot/data
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
